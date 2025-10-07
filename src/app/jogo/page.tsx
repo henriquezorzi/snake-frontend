@@ -13,16 +13,12 @@ export default function Jogo() {
   const [direction, setDirection] = useState("RIGHT");
   const [pontos, setPontos] = useState(0);
   const [morto, setMorto] = useState(false);
-
   
-  const nomeJogador =
-    typeof window !== "undefined" ? localStorage.getItem("nomeJogador") : "";
-  const jogadorId =
-    typeof window !== "undefined" ? localStorage.getItem("jogadorId") : "";
+  const nomeJogador = typeof window !== "undefined" ? localStorage.getItem("nomeJogador") : "";
+  const jogadorId = typeof window !== "undefined" ? localStorage.getItem("jogadorId") : "";
 
   const box = 20;
   const canvasSize = 20;
-
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -30,7 +26,6 @@ export default function Jogo() {
       if (ctx) setContext(ctx);
     }
   }, []);
-
   
   useEffect(() => {
     if (!context || morto) return;
@@ -52,7 +47,6 @@ export default function Jogo() {
       document.removeEventListener("keydown", handleKey);
     };
   }, [context, snake, direction, apple, morto]);
-
   
   const gameLoop = () => {
     if (!context) return;
@@ -61,16 +55,13 @@ export default function Jogo() {
     context.fillStyle = "#111";
     context.fillRect(0, 0, box * canvasSize, box * canvasSize);
 
-  
     context.fillStyle = "lime";
     snake.forEach((s) => {
       context.fillRect(s.x * box, s.y * box, box, box);
     });
-
     
     context.fillStyle = "red";
     context.fillRect(apple.x * box, apple.y * box, box, box);
-
     
     const head = { ...snake[0] };
     if (direction === "UP") head.y -= 1;
@@ -83,7 +74,6 @@ export default function Jogo() {
       morrer();
       return;
     }
-
     
     for (let i = 0; i < snake.length; i++) {
       if (head.x === snake[i].x && head.y === snake[i].y) {
@@ -92,9 +82,8 @@ export default function Jogo() {
       }
     }
 
-    let newSnake = [head, ...snake];
+    const newSnake = [head, ...snake];
 
-    
     if (head.x === apple.x && head.y === apple.y) {
       setPontos((p) => p + 10);
       setApple({
@@ -108,7 +97,6 @@ export default function Jogo() {
     setSnake(newSnake);
   };
 
-  
   const salvarScore = async () => {
     if (!jogadorId) return;
     try {
@@ -120,7 +108,6 @@ export default function Jogo() {
       console.error("Erro ao salvar score:", err);
     }
   };
-
   
   const morrer = () => {
     setMorto(true);
