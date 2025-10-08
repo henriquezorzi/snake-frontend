@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 10, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/Suporte%20N1/snake-frontend/src/app/context/jogadorContext.tsx"],"sourcesContent":["\"use client\";\r\n\r\nimport { createContext, useContext, useState, ReactNode } from \"react\";\r\n\r\ninterface Jogador {\r\n  _id: string;\r\n  name: string;\r\n  score: number;\r\n}\r\n\r\ninterface JogadorContextType {\r\n  jogador: Jogador | null;\r\n  setJogador: (j: Jogador | null) => void;\r\n}\r\n\r\nconst JogadorContext = createContext<JogadorContextType>({\r\n  jogador: null,\r\n  setJogador: () => {},\r\n});\r\n\r\nexport const JogadorProvider = ({ children }: { children: ReactNode }) => {\r\n  const [jogador, setJogador] = useState<Jogador | null>(null);\r\n  return (\r\n    <JogadorContext.Provider value={{ jogador, setJogador }}>\r\n      {children}\r\n    </JogadorContext.Provider>\r\n  );\r\n};\r\n\r\nexport const useJogador = () => useContext(JogadorContext);\r\n"],"names":[],"mappings":";;;;;;;AAEA;AAFA;;;AAeA,MAAM,+BAAiB,IAAA,2OAAa,EAAqB;IACvD,SAAS;IACT,YAAY,KAAO;AACrB;AAEO,MAAM,kBAAkB,CAAC,EAAE,QAAQ,EAA2B;IACnE,MAAM,CAAC,SAAS,WAAW,GAAG,IAAA,sOAAQ,EAAiB;IACvD,qBACE,mQAAC,eAAe,QAAQ;QAAC,OAAO;YAAE;YAAS;QAAW;kBACnD;;;;;;AAGP;AAEO,MAAM,aAAa,IAAM,IAAA,wOAAU,EAAC","debugId":null}}]
+}
