@@ -1,29 +1,27 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // ✅ hook do Next
+import { useRouter } from "next/navigation";
 
 export default function Menu() {
   const [selected, setSelected] = useState(0);
-  const router = useRouter(); // ✅ substitui useNavigate
+  const router = useRouter(); 
 
-  const options = ["JOGAR", "RANKING", "EXIT"];
+  const options = ["JOGAR", "RANKING"];
+
+  const handleOptionClick = (optionName: string) => {
+    if (optionName === "JOGAR") {
+      router.push("/login"); 
+    } else if (optionName === "RANKING") {
+      router.push("/raking"); 
+    }
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowUp") {
-        setSelected((prev) => (prev === 0 ? options.length - 1 : prev - 1));
-      } else if (e.key === "ArrowDown") {
-        setSelected((prev) => (prev === options.length - 1 ? 0 : prev + 1));
-      } else if (e.key === "Enter") {
-        if (options[selected] === "JOGAR") {
-          router.push("/login"); // ✅ navega no Next.js
-        } else if (options[selected] === "RANKING") {
-          router.push("/raking"); // ✅ navega no Next.js
-        } else if (options[selected] === "EXIT") {
-          window.location.href = "https://google.com";
-        }
-      }
+      if (e.key === "Enter") {
+        handleOptionClick(options[selected]);
+      } 
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -43,10 +41,12 @@ export default function Menu() {
         {options.map((opt, index) => (
           <div
             key={opt}
-            className={`flex items-center text-xl md:text-2xl ${
+            className={`flex items-center text-xl md:text-2xl cursor-pointer transition-colors duration-200 hover:text-yellow-300 ${
               selected === index ? "text-yellow-300" : "text-white"
             }`}
             style={{ fontFamily: "Press Start 2P, cursive" }}
+            onClick={() => handleOptionClick(opt)}
+            onMouseEnter={() => setSelected(index)}
           >
             {selected === index && <span className="mr-2">▶</span>}
             {opt}
