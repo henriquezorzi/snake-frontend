@@ -92,7 +92,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center bg-black text-green-400 font-mono">
+    <div className="h-screen flex flex-col items-center justify-center bg-black text-yellow-400 font-mono">
       <h1 className="text-3xl mb-6">Bem-vindo jogador</h1>
       
       {errorMessage && (
