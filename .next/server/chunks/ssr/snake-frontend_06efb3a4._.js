@@ -8,33 +8,29 @@ __turbopack_context__.s([
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/snake-frontend/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/snake-frontend/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/snake-frontend/node_modules/next/navigation.js [app-ssr] (ecmascript)"); // ✅ hook do Next
+var __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/snake-frontend/node_modules/next/navigation.js [app-ssr] (ecmascript)");
 "use client";
 ;
 ;
 ;
 function Menu() {
     const [selected, setSelected] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(0);
-    const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRouter"])(); // ✅ substitui useNavigate
+    const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRouter"])();
     const options = [
         "JOGAR",
-        "RANKING",
-        "EXIT"
+        "RANKING"
     ];
+    const handleOptionClick = (optionName)=>{
+        if (optionName === "JOGAR") {
+            router.push("/login");
+        } else if (optionName === "RANKING") {
+            router.push("/raking");
+        }
+    };
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         const handleKeyDown = (e)=>{
-            if (e.key === "ArrowUp") {
-                setSelected((prev)=>prev === 0 ? options.length - 1 : prev - 1);
-            } else if (e.key === "ArrowDown") {
-                setSelected((prev)=>prev === options.length - 1 ? 0 : prev + 1);
-            } else if (e.key === "Enter") {
-                if (options[selected] === "JOGAR") {
-                    router.push("/login"); // ✅ navega no Next.js
-                } else if (options[selected] === "RANKING") {
-                    router.push("/raking"); // ✅ navega no Next.js
-                } else if (options[selected] === "EXIT") {
-                    window.location.href = "https://google.com";
-                }
+            if (e.key === "Enter") {
+                handleOptionClick(options[selected]);
             }
         };
         window.addEventListener("keydown", handleKeyDown);
@@ -55,16 +51,18 @@ function Menu() {
                 children: "SNAKE-ONLINE"
             }, void 0, false, {
                 fileName: "[project]/snake-frontend/src/app/page.tsx",
-                lineNumber: 35,
+                lineNumber: 33,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "flex flex-col gap-4",
                 children: options.map((opt, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: `flex items-center text-xl md:text-2xl ${selected === index ? "text-yellow-300" : "text-white"}`,
+                        className: `flex items-center text-xl md:text-2xl cursor-pointer transition-colors duration-200 hover:text-yellow-300 ${selected === index ? "text-yellow-300" : "text-white"}`,
                         style: {
                             fontFamily: "Press Start 2P, cursive"
                         },
+                        onClick: ()=>handleOptionClick(opt),
+                        onMouseEnter: ()=>setSelected(index),
                         children: [
                             selected === index && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                 className: "mr-2",
@@ -78,18 +76,18 @@ function Menu() {
                         ]
                     }, opt, true, {
                         fileName: "[project]/snake-frontend/src/app/page.tsx",
-                        lineNumber: 44,
+                        lineNumber: 42,
                         columnNumber: 11
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/snake-frontend/src/app/page.tsx",
-                lineNumber: 42,
+                lineNumber: 40,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/snake-frontend/src/app/page.tsx",
-        lineNumber: 34,
+        lineNumber: 32,
         columnNumber: 5
     }, this);
 }

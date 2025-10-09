@@ -167,11 +167,13 @@ const INITIAL_APPLE = {
 function Page() {
     _s();
     const canvasRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
+    const intervalRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
     const [snake, setSnake] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(INITIAL_SNAKE);
     const [apple, setApple] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(INITIAL_APPLE);
     const [direction, setDirection] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("RIGHT");
     const [score, setScore] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(0);
     const [isDead, setIsDead] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    // read once (safe for SSR check)
     const playerName = ("TURBOPACK compile-time truthy", 1) ? localStorage.getItem("nomeJogador") : "TURBOPACK unreachable";
     const playerId = ("TURBOPACK compile-time truthy", 1) ? localStorage.getItem("jogadorId") : "TURBOPACK unreachable";
     function draw(ctx) {
@@ -191,13 +193,15 @@ function Page() {
         ctx.fillStyle = APPLE_COLOR;
         ctx.fillRect(apple.x * CELL_SIZE, apple.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
     }
+    function saveScoreRemote(finalScore) {
+        if (!playerId) return;
+        __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].put("http://localhost:4000/jogadores/".concat(playerId, "/score"), {
+            score: finalScore
+        }).then(()=>console.log("Score salvo/atualizado com sucesso!")).catch((err)=>console.error("Erro ao salvar score:", err));
+    }
     function gameOver() {
         setIsDead(true);
-        if (playerId) {
-            __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].put("http://localhost:4000/jogadores/".concat(playerId, "/score"), {
-                score
-            });
-        }
+        saveScoreRemote(score);
     }
     function restartGame() {
         setSnake(INITIAL_SNAKE);
@@ -206,8 +210,7 @@ function Page() {
         setScore(0);
         setIsDead(false);
     }
-    function gameLoop(ctx) {
-        draw(ctx);
+    function step() {
         const head = {
             ...snake[0]
         };
@@ -245,16 +248,49 @@ function Page() {
         }
         setSnake(newSnake);
     }
+    // draw + step loop
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "Page.useEffect": ()=>{
-            var _canvasRef_current;
-            const ctx = (_canvasRef_current = canvasRef.current) === null || _canvasRef_current === void 0 ? void 0 : _canvasRef_current.getContext("2d");
-            if (!ctx || isDead) return;
-            const interval = setInterval({
-                "Page.useEffect.interval": ()=>{
-                    gameLoop(ctx);
+            const canvas = canvasRef.current;
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return;
+            // desenha imediatamente
+            draw(ctx);
+            // limpa qualquer intervalo anterior
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+            if (isDead) return;
+            // loop de jogo
+            intervalRef.current = window.setInterval({
+                "Page.useEffect": ()=>{
+                    step();
+                    // redesenha após o passo
+                    const ctx2 = canvas.getContext("2d");
+                    if (ctx2) draw(ctx2);
                 }
-            }["Page.useEffect.interval"], 150);
+            }["Page.useEffect"], 150);
+            return ({
+                "Page.useEffect": ()=>{
+                    if (intervalRef.current) {
+                        clearInterval(intervalRef.current);
+                        intervalRef.current = null;
+                    }
+                }
+            })["Page.useEffect"];
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        }
+    }["Page.useEffect"], [
+        snake,
+        apple,
+        direction,
+        isDead
+    ]);
+    // keyboard
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "Page.useEffect": ()=>{
             const handleKey = {
                 "Page.useEffect.handleKey": (e)=>{
                     if (e.key === "ArrowUp" && direction !== "DOWN") setDirection("UP");
@@ -265,17 +301,11 @@ function Page() {
             }["Page.useEffect.handleKey"];
             document.addEventListener("keydown", handleKey);
             return ({
-                "Page.useEffect": ()=>{
-                    clearInterval(interval);
-                    document.removeEventListener("keydown", handleKey);
-                }
+                "Page.useEffect": ()=>document.removeEventListener("keydown", handleKey)
             })["Page.useEffect"];
         }
     }["Page.useEffect"], [
-        snake,
-        direction,
-        apple,
-        isDead
+        direction
     ]);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         style: {
@@ -293,7 +323,7 @@ function Page() {
                 children: "🐍 SNAKE 🐍"
             }, void 0, false, {
                 fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-                lineNumber: 131,
+                lineNumber: 166,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -307,7 +337,7 @@ function Page() {
                 ]
             }, void 0, true, {
                 fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-                lineNumber: 141,
+                lineNumber: 176,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -321,7 +351,7 @@ function Page() {
                 ]
             }, void 0, true, {
                 fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-                lineNumber: 144,
+                lineNumber: 179,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -341,30 +371,30 @@ function Page() {
                         }
                     }, void 0, false, {
                         fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-                        lineNumber: 149,
+                        lineNumber: 184,
                         columnNumber: 9
                     }, this),
                     isDead && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$src$2f$app$2f$jogo$2f$JogarDeNovo$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                         onRestart: restartGame
                     }, void 0, false, {
                         fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-                        lineNumber: 155,
+                        lineNumber: 190,
                         columnNumber: 20
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-                lineNumber: 148,
+                lineNumber: 183,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-        lineNumber: 130,
+        lineNumber: 165,
         columnNumber: 5
     }, this);
 }
-_s(Page, "4LGDsN/cpm3iNTXz4Cc0Iv0R6UQ=");
+_s(Page, "Cr79NDU1ODsZn0+XcTfigBlRM9c=");
 _c = Page;
 var _c;
 __turbopack_context__.k.register(_c, "Page");

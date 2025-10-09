@@ -18,11 +18,48 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$src$2f$
 function LoginPage() {
     const [name, setName] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
     const [password, setPassword] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
+    const [errorMessage, setErrorMessage] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRouter"])();
     const { setJogador } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$src$2f$app$2f$context$2f$jogadorContext$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useJogador"])();
     const handleLogin = async ()=>{
-        if (!name || !password) return;
+        if (!name || !password) {
+            setErrorMessage("Por favor, preencha nome e senha");
+            return;
+        }
+        // Validação do nome
+        if (name.length < 3) {
+            setErrorMessage("Nome deve ter pelo menos 3 caracteres");
+            return;
+        }
+        // Validação da senha
+        if (password.length < 4) {
+            setErrorMessage("Senha deve ter pelo menos 4 caracteres");
+            return;
+        }
+        if (password.length > 20) {
+            setErrorMessage("Senha deve ter no máximo 20 caracteres");
+            return;
+        }
+        // Verificar se a senha contém pelo menos uma letra e um número
+        const hasLetter = /[a-zA-Z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        if (!hasLetter || !hasNumber) {
+            setErrorMessage("Senha deve conter pelo menos uma letra e um número");
+            return;
+        }
+        setErrorMessage("");
         try {
+            // Verificar se já existe um jogador com esse nome no banco
+            const checkRes = await fetch("http://localhost:4000/jogadores");
+            if (checkRes.ok) {
+                const existingPlayers = await checkRes.json();
+                const nameExists = existingPlayers.find((player)=>player.name?.toLowerCase().trim() === name.toLowerCase().trim());
+                if (nameExists) {
+                    setErrorMessage(`O nome "${name}" já está sendo usado por outro jogador. Escolha um nome diferente.`);
+                    return;
+                }
+            }
+            // Se o nome não existe, tenta criar o jogador
             const res = await fetch("http://localhost:4000/jogadores", {
                 method: "POST",
                 headers: {
@@ -40,11 +77,16 @@ function LoginPage() {
                 ;
                 router.push("/jogo");
             } else {
-                alert("Erro no login/cadastro: " + (data.error || "Servidor não respondeu"));
+                // Se mesmo assim der erro de nome duplicado (double-check do backend)
+                if (res.status === 409 || data.error && (data.error.includes("já existe") || data.error.includes("duplicado"))) {
+                    setErrorMessage(`O nome "${name}" já está sendo usado. Tente outro nome.`);
+                } else {
+                    setErrorMessage(data.error || "Erro no cadastro/login");
+                }
             }
         } catch (err) {
             console.error(err);
-            alert("Erro ao conectar com o servidor");
+            setErrorMessage("Erro ao conectar com o servidor");
         }
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -55,17 +97,28 @@ function LoginPage() {
                 children: "Bem-vindo jogador"
             }, void 0, false, {
                 fileName: "[project]/snake-frontend/src/app/login/page.tsx",
-                lineNumber: 47,
+                lineNumber: 96,
                 columnNumber: 7
+            }, this),
+            errorMessage && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "mb-4 p-3 bg-red-900/50 border border-red-500 rounded text-red-300 text-center max-w-md",
+                children: errorMessage
+            }, void 0, false, {
+                fileName: "[project]/snake-frontend/src/app/login/page.tsx",
+                lineNumber: 99,
+                columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                 className: "mb-4 px-4 py-2 rounded bg-gray-800 text-white",
                 placeholder: "Nome",
                 value: name,
-                onChange: (e)=>setName(e.target.value)
+                onChange: (e)=>{
+                    setName(e.target.value);
+                    setErrorMessage("");
+                }
             }, void 0, false, {
                 fileName: "[project]/snake-frontend/src/app/login/page.tsx",
-                lineNumber: 48,
+                lineNumber: 104,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -73,10 +126,18 @@ function LoginPage() {
                 className: "mb-4 px-4 py-2 rounded bg-gray-800 text-white",
                 placeholder: "Senha",
                 value: password,
-                onChange: (e)=>setPassword(e.target.value)
+                onChange: (e)=>{
+                    setPassword(e.target.value);
+                    setErrorMessage("");
+                },
+                onKeyPress: (e)=>{
+                    if (e.key === "Enter") {
+                        handleLogin();
+                    }
+                }
             }, void 0, false, {
                 fileName: "[project]/snake-frontend/src/app/login/page.tsx",
-                lineNumber: 54,
+                lineNumber: 113,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -85,13 +146,52 @@ function LoginPage() {
                 children: "Entrar"
             }, void 0, false, {
                 fileName: "[project]/snake-frontend/src/app/login/page.tsx",
-                lineNumber: 61,
+                lineNumber: 128,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "mt-6 text-sm text-gray-400 text-center max-w-md",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                        className: "mb-2",
+                        children: "Requisitos:"
+                    }, void 0, false, {
+                        fileName: "[project]/snake-frontend/src/app/login/page.tsx",
+                        lineNumber: 136,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                        children: "• Nome: mínimo 3 caracteres (deve ser único)"
+                    }, void 0, false, {
+                        fileName: "[project]/snake-frontend/src/app/login/page.tsx",
+                        lineNumber: 137,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                        children: "• Senha: 4-20 caracteres com letra e número"
+                    }, void 0, false, {
+                        fileName: "[project]/snake-frontend/src/app/login/page.tsx",
+                        lineNumber: 138,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                        className: "mt-2 text-xs text-yellow-400",
+                        children: "⚠️ Cada jogador deve ter um nome único no ranking"
+                    }, void 0, false, {
+                        fileName: "[project]/snake-frontend/src/app/login/page.tsx",
+                        lineNumber: 139,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/snake-frontend/src/app/login/page.tsx",
+                lineNumber: 135,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/snake-frontend/src/app/login/page.tsx",
-        lineNumber: 46,
+        lineNumber: 95,
         columnNumber: 5
     }, this);
 }

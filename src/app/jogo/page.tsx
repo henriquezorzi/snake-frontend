@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import JogarDeNovo from "./JogarDeNovo";
 import "@fontsource/press-start-2p";
@@ -13,27 +13,25 @@ const APPLE_COLOR = "yellow";
 const GRID_COLOR_DARK = "#1a1a1a";
 const GRID_COLOR_LIGHT = "#2e2e2e";
 
-const INITIAL_SNAKE = [{ x: 8, y: 8 }];
-const INITIAL_APPLE = { x: 12, y: 12 };
+type Point = { x: number; y: number };
+type Dir = "UP" | "DOWN" | "LEFT" | "RIGHT";
 
-export default function Page() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+const INITIAL_SNAKE: Point[] = [{ x: 8, y: 8 }];
+const INITIAL_APPLE: Point = { x: 12, y: 12 };
 
-  const [snake, setSnake] = useState(INITIAL_SNAKE);
-  const [apple, setApple] = useState(INITIAL_APPLE);
-  const [direction, setDirection] = useState("RIGHT");
+export default function Page(): JSX.Element {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const intervalRef = useRef<number | null>(null);
+
+  const [snake, setSnake] = useState<Point[]>(INITIAL_SNAKE);
+  const [apple, setApple] = useState<Point>(INITIAL_APPLE);
+  const [direction, setDirection] = useState<Dir>("RIGHT");
   const [score, setScore] = useState(0);
   const [isDead, setIsDead] = useState(false);
 
-  const playerName =
-    typeof window !== "undefined" ? localStorage.getItem("nomeJogador") : "";
-  const playerId =
-    typeof window !== "undefined" ? localStorage.getItem("jogadorId") : "";
-  const [pontos, setPontos] = useState(0);
-  const [morto, setMorto] = useState(false);
-  
-  const nomeJogador = typeof window !== "undefined" ? localStorage.getItem("nomeJogador") : "";
-  const jogadorId = typeof window !== "undefined" ? localStorage.getItem("jogadorId") : "";
+  // read once (safe for SSR check)
+  const playerName = typeof window !== "undefined" ? localStorage.getItem("nomeJogador") : null;
+  const playerId = typeof window !== "undefined" ? localStorage.getItem("jogadorId") : null;
 
   function draw(ctx: CanvasRenderingContext2D) {
     // fundo quadriculado
@@ -43,21 +41,29 @@ export default function Page() {
         ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
       }
     }
+
     // cobra
     ctx.fillStyle = SNAKE_COLOR;
     snake.forEach((seg) => {
       ctx.fillRect(seg.x * CELL_SIZE, seg.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
     });
+
     // maçã
     ctx.fillStyle = APPLE_COLOR;
     ctx.fillRect(apple.x * CELL_SIZE, apple.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
   }
 
+  function saveScoreRemote(finalScore: number) {
+    if (!playerId) return;
+    axios
+      .put(`http://localhost:4000/jogadores/${playerId}/score`, { score: finalScore })
+      .then(() => console.log("Score salvo/atualizado com sucesso!"))
+      .catch((err) => console.error("Erro ao salvar score:", err));
+  }
+
   function gameOver() {
     setIsDead(true);
-    if (playerId) {
-      axios.put(`http://localhost:4000/jogadores/${playerId}/score`, { score });
-    }
+    saveScoreRemote(score);
   }
 
   function restartGame() {
@@ -68,9 +74,7 @@ export default function Page() {
     setIsDead(false);
   }
 
-  function gameLoop(ctx: CanvasRenderingContext2D) {
-    draw(ctx);
-
+  function step() {
     const head = { ...snake[0] };
     if (direction === "UP") head.y--;
     if (direction === "DOWN") head.y++;
@@ -82,6 +86,7 @@ export default function Page() {
       gameOver();
       return;
     }
+
     // colisão corpo
     if (snake.some((seg, i) => i !== 0 && seg.x === head.x && seg.y === head.y)) {
       gameOver();
@@ -93,7 +98,7 @@ export default function Page() {
     // comeu maçã
     if (head.x === apple.x && head.y === apple.y) {
       setScore((s) => s + 10);
-      let newApple;
+      let newApple: Point;
       do {
         newApple = {
           x: Math.floor(Math.random() * GRID_SIZE),
@@ -108,21 +113,43 @@ export default function Page() {
     setSnake(newSnake);
   }
 
+  // draw + step loop
   useEffect(() => {
-    if (canvasRef.current) {
-      const ctx = canvasRef.current.getContext("2d");
-      if (ctx) setContext(ctx);
-    }
-  }, []);
-  
-  useEffect(() => {
-    const ctx = canvasRef.current?.getContext("2d");
-    if (!ctx || isDead) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    const interval = setInterval(() => {
-      gameLoop(ctx);
+    // desenha imediatamente
+    draw(ctx);
+
+    // limpa qualquer intervalo anterior
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
+    if (isDead) return;
+
+    // loop de jogo
+    intervalRef.current = window.setInterval(() => {
+      step();
+      // redesenha após o passo
+      const ctx2 = canvas.getContext("2d");
+      if (ctx2) draw(ctx2);
     }, 150);
 
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [snake, apple, direction, isDead]);
+
+  // keyboard
+  useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowUp" && direction !== "DOWN") setDirection("UP");
       if (e.key === "ArrowDown" && direction !== "UP") setDirection("DOWN");
@@ -131,79 +158,8 @@ export default function Page() {
     };
 
     document.addEventListener("keydown", handleKey);
-
-    return () => {
-      clearInterval(interval);
-      document.removeEventListener("keydown", handleKey);
-    };
-  }, [snake, direction, apple, isDead]);
-  }, [context, snake, direction, apple, morto]);
-  
-  const gameLoop = () => {
-    if (!context) return;
-
-    // Limpa tela
-    context.fillStyle = "#111";
-    context.fillRect(0, 0, box * canvasSize, box * canvasSize);
-
-    context.fillStyle = "lime";
-    snake.forEach((s) => {
-      context.fillRect(s.x * box, s.y * box, box, box);
-    });
-    
-    context.fillStyle = "red";
-    context.fillRect(apple.x * box, apple.y * box, box, box);
-    
-    const head = { ...snake[0] };
-    if (direction === "UP") head.y -= 1;
-    if (direction === "DOWN") head.y += 1;
-    if (direction === "LEFT") head.x -= 1;
-    if (direction === "RIGHT") head.x += 1;
-
-    // Colisão com paredes
-    if (head.x < 0 || head.y < 0 || head.x >= canvasSize || head.y >= canvasSize) {
-      morrer();
-      return;
-    }
-    
-    for (let i = 0; i < snake.length; i++) {
-      if (head.x === snake[i].x && head.y === snake[i].y) {
-        morrer();
-        return;
-      }
-    }
-
-    const newSnake = [head, ...snake];
-
-    if (head.x === apple.x && head.y === apple.y) {
-      setPontos((p) => p + 10);
-      setApple({
-        x: Math.floor(Math.random() * canvasSize),
-        y: Math.floor(Math.random() * canvasSize),
-      });
-    } else {
-      newSnake.pop();
-    }
-
-    setSnake(newSnake);
-  };
-
-  const salvarScore = async () => {
-    if (!jogadorId) return;
-    try {
-      await axios.put(`http://localhost:4000/jogadores/${jogadorId}/score`, {
-        score: pontos,
-      });
-      console.log("Score salvo/atualizado com sucesso!");
-    } catch (err) {
-      console.error("Erro ao salvar score:", err);
-    }
-  };
-  
-  const morrer = () => {
-    setMorto(true);
-    salvarScore(); 
-  };
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [direction]);
 
   return (
     <div style={{ textAlign: "center", minHeight: "100vh", background: "#111" }}>
@@ -236,4 +192,3 @@ export default function Page() {
     </div>
   );
 }
-
