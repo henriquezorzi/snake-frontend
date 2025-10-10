@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, {  useEffect, useRef, useState } from "react";
 import axios from "axios";
 import JogarDeNovo from "./JogarDeNovo";
 import "@fontsource/press-start-2p";

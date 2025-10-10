@@ -2,6 +2,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useJogador } from "../context/jogadorContext";
+import Link from "next/link";
+
+function validate(name: string, password: string) {
+    if (!name || !password) return "Por favor, preencha nome e senha";
+    return "";
+}
 
 export default function LoginPage() {
   const [name, setName] = useState("");
@@ -12,7 +18,7 @@ export default function LoginPage() {
   const { setJogador } = useJogador();
 
   const handleLogin = async () => {
-    // validações (mantive as suas)
+    
     const trimmedName = name.trim();
     if (!trimmedName) {
       setErrorMessage("Por favor, preencha o nome");
@@ -58,7 +64,7 @@ export default function LoginPage() {
         }
       }
 
-      // cria jogador
+      
       const res = await fetch("http://localhost:4000/jogadores", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -97,20 +103,20 @@ export default function LoginPage() {
         </div>
       )}
 
-      {/* HONEYPOTs: campos que enganam o autofill, posicionados fora da tela */}
+      {}
       <div style={{ position: "absolute", left: -9999, top: 0, height: 0, width: 0, overflow: "hidden" }} aria-hidden>
         <input name="no_autofill_user" type="text" autoComplete="username" tabIndex={-1} />
         <input name="no_autofill_pass" type="password" autoComplete="new-password" tabIndex={-1} />
       </div>
 
-      {/* Form real com autocomplete desligado */}
+      {}
       <form
         onSubmit={(e) => { e.preventDefault(); handleLogin(); }}
         autoComplete="off"
         className="flex flex-col items-center"
       >
         <input
-          // nome sem palavras comuns como "username" ou "password"
+         
           name="jogo_nome"
           autoComplete="off"
           className="mb-4 px-4 py-2 rounded bg-gray-800 text-white"
@@ -120,7 +126,7 @@ export default function LoginPage() {
         />
 
         <input
-          // rotina: readOnly até o usuário focar — ajuda a prevenir autofill e prompt de salvar
+          
           name="jogo_senha"
           autoComplete="new-password"
           className="mb-4 px-4 py-2 rounded bg-gray-800 text-white"
@@ -128,10 +134,10 @@ export default function LoginPage() {
           value={password}
           onChange={(e) => { setPassword(e.target.value); setErrorMessage(""); }}
           onKeyDown={(e) => { if (e.key === "Enter") handleLogin(); }}
-          // starta readOnly para evitar autofill; ao focar removemos o readOnly
+          
           readOnly
           onFocus={(e) => {
-            // remove readOnly quando o usuário focar (funciona bem em React)
+           
             (e.target as HTMLInputElement).removeAttribute("readOnly");
           }}
         />
