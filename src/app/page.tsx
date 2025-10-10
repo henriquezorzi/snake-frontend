@@ -13,7 +13,7 @@ export default function Menu() {
     if (optionName === "JOGAR") {
       router.push("/login"); 
     } else if (optionName === "RANKING") {
-      router.push("/raking"); 
+      router.push("/ranking"); 
     }
   };
 

@@ -2,144 +2,122 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useJogador } from "../context/jogadorContext";
+import Link from "next/link";
+
+function validate(name: string, password: string) {
+    if (!name || !password) return "Por favor, preencha nome e senha";
+    return "";
+}
 
 export default function LoginPage() {
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const router = useRouter();
-  const { setJogador } = useJogador();
+    const [name, setName] = useState("");
+    const [password, setPassword] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const router = useRouter();
+    const { setJogador } = useJogador();
 
-  const handleLogin = async () => {
-    if (!name || !password) {
-      setErrorMessage("Por favor, preencha nome e senha");
-      return;
-    }
-
-    // Validação do nome
-    if (name.length < 3) {
-      setErrorMessage("Nome deve ter pelo menos 3 caracteres");
-      return;
-    }
-
-    // Validação da senha
-    if (password.length < 4) {
-      setErrorMessage("Senha deve ter pelo menos 4 caracteres");
-      return;
-    }
-
-    if (password.length > 20) {
-      setErrorMessage("Senha deve ter no máximo 20 caracteres");
-      return;
-    }
-
-    // Verificar se a senha contém pelo menos uma letra e um número
-    const hasLetter = /[a-zA-Z]/.test(password);
-    const hasNumber = /[0-9]/.test(password);
-    
-    if (!hasLetter || !hasNumber) {
-      setErrorMessage("Senha deve conter pelo menos uma letra e um número");
-      return;
-    }
-
-    setErrorMessage("");
-
-    try {
-      // Verificar se já existe um jogador com esse nome no banco
-      const checkRes = await fetch("http://localhost:4000/jogadores");
-      if (checkRes.ok) {
-        const existingPlayers = await checkRes.json();
-        const nameExists = existingPlayers.find((player: any) => 
-          player.name?.toLowerCase().trim() === name.toLowerCase().trim()
-        );
-        
-        if (nameExists) {
-          setErrorMessage(`O nome "${name}" já está sendo usado por outro jogador. Escolha um nome diferente.`);
-          return;
-        }
-      }
-
-      // Se o nome não existe, tenta criar o jogador
-      const res = await fetch("http://localhost:4000/jogadores", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, password }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        setJogador(data.jogador);
-
-        if (typeof window !== "undefined") {
-          localStorage.setItem("nomeJogador", data.jogador.name);
-          localStorage.setItem("jogadorId", data.jogador._id);
+    const handleLogin = async () => {
+        const validationError = validate(name, password);
+        if (validationError) {
+            setErrorMessage(validationError);
+            return;
         }
 
-        router.push("/jogo");
-      } else {
-        // Se mesmo assim der erro de nome duplicado (double-check do backend)
-        if (res.status === 409 || (data.error && (data.error.includes("já existe") || data.error.includes("duplicado")))) {
-          setErrorMessage(`O nome "${name}" já está sendo usado. Tente outro nome.`);
-        } else {
-          setErrorMessage(data.error || "Erro no cadastro/login");
-        }
-      }
-    } catch (err) {
-      console.error(err);
-      setErrorMessage("Erro ao conectar com o servidor");
-    }
-  };
+        setErrorMessage("");
+        try {
+            // Buscar jogador existente e não criar automaticamente
+            const res = await fetch("http://localhost:4000/jogadores");
+            if (!res.ok) {
+                // tenta ler mensagem do backend (json) e mostra status
+                const text = await res.text().catch(() => null);
+                let serverMsg = res.statusText;
+                try {
+                    const parsed = text ? JSON.parse(text) : null;
+                    if (parsed && parsed.error) serverMsg = parsed.error;
+                } catch (e) {
+                    // não JSON, manter statusText
+                }
+                setErrorMessage(`Erro ${res.status}: ${serverMsg}`);
+                return;
+            }
 
-  return (
-    <div className="h-screen flex flex-col items-center justify-center bg-black text-yellow-400 font-mono">
-      <h1 className="text-3xl mb-6">Bem-vindo jogador</h1>
-      
-      {errorMessage && (
-        <div className="mb-4 p-3 bg-red-900/50 border border-red-500 rounded text-red-300 text-center max-w-md">
-          {errorMessage}
-        </div>
-      )}
-      
-      <input
-        className="mb-4 px-4 py-2 rounded bg-gray-800 text-white"
-        placeholder="Nome"
-        value={name}
-        onChange={(e) => {
-          setName(e.target.value);
-          setErrorMessage(""); 
-        }}
-      />
-      <input
-        type="password"
-        className="mb-4 px-4 py-2 rounded bg-gray-800 text-white"
-        placeholder="Senha"
-        value={password}
-        onChange={(e) => {
-          setPassword(e.target.value);
-          setErrorMessage("");
-        }}
-        onKeyPress={(e) => {
-          if (e.key === "Enter") {
-            handleLogin();
-          }
-        }}
-      />
-      <button
-        className="border px-6 py-2 rounded hover:bg-green-600"
-        onClick={handleLogin}
-      >
-        Entrar
-      </button>
-      
-      <div className="mt-6 text-sm text-gray-400 text-center max-w-md">
-        <p className="mb-2">Requisitos:</p>
-        <p>• Nome: mínimo 3 caracteres (deve ser único)</p>
-        <p>• Senha: 4-20 caracteres com letra e número</p>
-        <p className="mt-2 text-xs text-yellow-400">
-          ⚠️ Cada jogador deve ter um nome único no ranking
-        </p>
-      </div>
-    </div>
-  );
+            const players = await res.json();
+            const jogador = players.find((p: any) => p.name?.toLowerCase().trim() === name.toLowerCase().trim());
+
+            if (!jogador) {
+                setErrorMessage("Usuário não foi encontrado. Por favor, cadastre-se primeiro.");
+                return;
+            }
+
+            if (jogador.password !== password) {
+                setErrorMessage("Senha incorreta");
+                return;
+            }
+
+            setJogador(jogador);
+            if (typeof window !== "undefined") {
+                localStorage.setItem("nomeJogador", jogador.name);
+                localStorage.setItem("jogadorId", jogador._id);
+            }
+            router.push("/jogo");
+        } catch (err: any) {
+            console.error(err);
+            // Mostra mensagem detalhada do erro de rede
+            setErrorMessage(err?.message || "Erro ao conectar com o servidor");
+        }
+    };
+
+    return (
+        <>
+            <Link
+                href="/"
+                className="absolute top-3 left-3 inline-flex items-center text-xl text-white hover:text-yellow-300 transition-colors duration-200 bg-transparent z-50"
+                style={{ fontFamily: "Press Start 2P, cursive" }}
+            >
+                <span className="mr-2">◀</span>
+                VOLTAR
+            </Link>
+
+            <div className="relative h-screen flex items-center justify-center bg-black text-yellow-400 font-mono">
+                <div className="w-full max-w-md mx-4">
+                    <div className="p-6 bg-gray-900/60 border border-gray-700 rounded">
+                        <h2 className="text-2xl mb-4">Login</h2>
+                        {errorMessage && (
+                            <div className="mb-4 p-2 bg-red-900/50 border border-red-500 rounded text-red-300 text-center">{errorMessage}</div>
+                        )}
+
+                        <input
+                            className="mb-3 w-full px-4 py-2 rounded bg-gray-800 text-white"
+                            placeholder="Nome"
+                            value={name}
+                            onChange={(e) => { setName(e.target.value); setErrorMessage(""); }}
+                        />
+
+                        <input
+                            type="password"
+                            className="mb-4 w-full px-4 py-2 rounded bg-gray-800 text-white"
+                            placeholder="Senha"
+                            value={password}
+                            onChange={(e) => { setPassword(e.target.value); setErrorMessage(""); }}
+                            onKeyPress={(e) => { if (e.key === "Enter") handleLogin(); }}
+                        />
+
+                        <button
+                            className="w-full border px-6 py-2 rounded hover:bg-yellow-400 hover:text-black"
+                            onClick={handleLogin}>
+                            Entrar
+                        </button>
+
+                        <p
+                            className="mt-4 text-sm text-gray-400">Ainda não tem conta?
+                            <Link
+                                href="/cadastrar"
+                                className="text-yellow-300"> Cadastre-se
+                            </Link>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
 }
