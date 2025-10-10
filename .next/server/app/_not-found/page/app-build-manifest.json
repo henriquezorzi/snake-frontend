@@ -1,19 +1,19 @@
 {
   "pages": {
     "/_not-found/page": [
-      "static/chunks/[root-of-the-server]__0f0ba101._.css",
-      "static/chunks/node_modules_next_dist_b47712da._.js",
-      "static/chunks/src_app_context_jogadorContext_tsx_d6e25f0d._.js",
-      "static/chunks/src_app_layout_tsx_0a548d63._.js",
-      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_57d40746._.js",
-      "static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js",
-      "static/chunks/node_modules_next_dist_compiled_next-devtools_index_a9cb0712.js",
-      "static/chunks/node_modules_next_dist_compiled_5150ccfd._.js",
-      "static/chunks/node_modules_next_dist_client_cf1d9188._.js",
-      "static/chunks/node_modules_next_dist_b0daae9a._.js",
-      "static/chunks/node_modules_@swc_helpers_cjs_b3dc30d6._.js",
-      "static/chunks/_a0ff3932._.js",
-      "static/chunks/turbopack-_cdba956c._.js"
+      "static/chunks/[root-of-the-server]__e6c28696._.css",
+      "static/chunks/3686a_next_dist_afdf34e1._.js",
+      "static/chunks/snake-frontend_src_app_context_jogadorContext_tsx_f83e1ada._.js",
+      "static/chunks/snake-frontend_src_app_layout_tsx_85d9af65._.js",
+      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_cfdc1efe._.js",
+      "static/chunks/3686a_next_dist_compiled_react-dom_deabefec._.js",
+      "static/chunks/3686a_next_dist_compiled_next-devtools_index_9e2afd4e.js",
+      "static/chunks/3686a_next_dist_compiled_5e0c3097._.js",
+      "static/chunks/3686a_next_dist_client_86bc3ee1._.js",
+      "static/chunks/3686a_next_dist_c2ad7c94._.js",
+      "static/chunks/3686a_@swc_helpers_cjs_8628d43f._.js",
+      "static/chunks/snake-frontend_a0ff3932._.js",
+      "static/chunks/turbopack-snake-frontend_a7276de5._.js"
     ]
   }
 }

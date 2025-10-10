@@ -7,23 +7,57 @@ __turbopack_context__.s([
     ()=>__TURBOPACK__default__export__
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/snake-frontend/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/snake-frontend/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/snake-frontend/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
+"use client";
+;
 ;
 ;
 const JogarDeNovo = (param)=>{
     let { onRestart } = param;
+    _s();
+    const [hoverRestart, setHoverRestart] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [hoverMenu, setHoverMenu] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const baseStyle = {
+        padding: "12px 20px",
+        borderRadius: "5px",
+        cursor: "pointer",
+        fontWeight: "bold",
+        transition: "background 0.2s, color 0.2s, border-color 0.2s",
+        textDecoration: "none",
+        display: "block",
+        textAlign: "center",
+        fontFamily: "'Press Start 2P', cursive"
+    };
+    const restartButtonStyle = {
+        ...baseStyle,
+        fontSize: "1.2em",
+        background: hoverRestart ? "yellow" : "white",
+        color: "black",
+        border: "none",
+        boxShadow: hoverRestart ? "0 4px 0 #ccaa00" : "0 4px 0 #333"
+    };
+    const menuLinkStyle = {
+        ...baseStyle,
+        fontSize: "1.1em",
+        background: hoverMenu ? "yellow" : "transparent",
+        color: hoverMenu ? "black" : "white",
+        border: hoverMenu ? "2px solid yellow" : "2px solid white"
+    };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         style: {
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             left: 0,
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.9)",
             zIndex: 10
         },
         children: [
@@ -32,12 +66,14 @@ const JogarDeNovo = (param)=>{
                     color: "yellow",
                     fontSize: "2.5em",
                     marginBottom: "30px",
-                    textShadow: "0 0 10px yellow"
+                    fontFamily: "'Press Start 2P', cursive",
+                    letterSpacing: "2px",
+                    textShadow: "\n            2px 2px 0 #000,\n            -2px 2px 0 #000,\n            2px -2px 0 #000,\n            -2px -2px 0 #000\n          "
                 },
                 children: "GAME OVER!"
             }, void 0, false, {
                 fileName: "[project]/snake-frontend/src/app/jogo/JogarDeNovo.tsx",
-                lineNumber: 23,
+                lineNumber: 60,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -51,76 +87,41 @@ const JogarDeNovo = (param)=>{
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                         onClick: onRestart,
-                        style: {
-                            background: "white",
-                            color: "black",
-                            padding: "12px 20px",
-                            border: "none",
-                            borderRadius: "5px",
-                            cursor: "pointer",
-                            fontSize: "1.2em",
-                            fontWeight: "bold",
-                            transition: "background 0.2s, transform 0.1s",
-                            boxShadow: "0 4px 0 #333"
-                        },
-                        // --- LÓGICA DO HOVER AMARELO ---
-                        onMouseEnter: (e)=>{
-                            e.currentTarget.style.background = 'yellow';
-                            e.currentTarget.style.boxShadow = '0 4px 0 #ccaa00';
-                        },
-                        onMouseLeave: (e)=>{
-                            e.currentTarget.style.background = 'white'; // Volta para branco
-                            e.currentTarget.style.boxShadow = '0 4px 0 #333';
-                        },
+                        style: restartButtonStyle,
+                        onMouseEnter: ()=>setHoverRestart(true),
+                        onMouseLeave: ()=>setHoverRestart(false),
                         title: "Inicia uma nova partida",
                         children: "JOGAR DE NOVO"
                     }, void 0, false, {
                         fileName: "[project]/snake-frontend/src/app/jogo/JogarDeNovo.tsx",
-                        lineNumber: 30,
+                        lineNumber: 87,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                         href: "/",
-                        style: {
-                            color: "white",
-                            textDecoration: "none",
-                            padding: "12px 20px",
-                            border: "2px solid white",
-                            borderRadius: "5px",
-                            fontSize: "1.1em",
-                            fontWeight: "bold",
-                            transition: "background 0.2s, color 0.2s, border-color 0.2s"
-                        },
-                        // --- LÓGICA DO HOVER AMARELO ---
-                        onMouseEnter: (e)=>{
-                            e.currentTarget.style.backgroundColor = 'yellow';
-                            e.currentTarget.style.color = 'black';
-                            e.currentTarget.style.borderColor = 'yellow';
-                        },
-                        onMouseLeave: (e)=>{
-                            e.currentTarget.style.backgroundColor = 'transparent'; // Volta para transparente
-                            e.currentTarget.style.color = 'white';
-                            e.currentTarget.style.borderColor = 'white';
-                        },
+                        style: menuLinkStyle,
+                        onMouseEnter: ()=>setHoverMenu(true),
+                        onMouseLeave: ()=>setHoverMenu(false),
                         children: "VOLTAR AO MENU"
                     }, void 0, false, {
                         fileName: "[project]/snake-frontend/src/app/jogo/JogarDeNovo.tsx",
-                        lineNumber: 59,
+                        lineNumber: 97,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/snake-frontend/src/app/jogo/JogarDeNovo.tsx",
-                lineNumber: 27,
+                lineNumber: 78,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/snake-frontend/src/app/jogo/JogarDeNovo.tsx",
-        lineNumber: 10,
+        lineNumber: 45,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
+_s(JogarDeNovo, "yn8nJwgutS7mLxulRNoRRKyaHJY=");
 _c = JogarDeNovo;
 const __TURBOPACK__default__export__ = JogarDeNovo;
 var _c;
@@ -129,313 +130,11 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
 }
 }),
-"[project]/snake-frontend/src/app/jogo/page.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
-"use strict";
+"[project]/snake-frontend/src/app/jogo/page.tsx [app-client] (ecmascript)", ((__turbopack_context__, module, exports) => {
 
-__turbopack_context__.s([
-    "default",
-    ()=>Jogo
-]);
-var __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/snake-frontend/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/snake-frontend/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$src$2f$app$2f$jogo$2f$JogarDeNovo$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/snake-frontend/src/app/jogo/JogarDeNovo.tsx [app-client] (ecmascript)");
-;
-var _s = __turbopack_context__.k.signature();
-"use client";
-;
-;
-// =================================================================
-// 🎮 Configurações do Jogo (AJUSTADAS)
-// =================================================================
-const CELL_SIZE = 30; // Aumentado de 20 para 30 pixels
-const GRID_SIZE = 20; // Mantido em 20x20 células
-const GAME_SPEED = 200; // Diminuído de 150ms para 200ms (mais lento)
-// Cores e Posições Iniciais (mantidas)
-const SNAKE_COLOR = "white";
-const APPLE_COLOR = "yellow";
-const GRID_COLOR_DARK = "#1a1a1a";
-const GRID_COLOR_LIGHT = "#2e2e2e";
-const INITIAL_SNAKE = [
-    {
-        x: 8,
-        y: 8
-    }
-];
-const INITIAL_APPLE = {
-    x: 12,
-    y: 12
-};
-function Jogo() {
-    _s();
-    const canvasRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
-    const [context, setContext] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
-    // Estados principais do jogo
-    const [snake, setSnake] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(INITIAL_SNAKE);
-    const [apple, setApple] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(INITIAL_APPLE);
-    const [direction, setDirection] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("RIGHT");
-    const [score, setScore] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(0);
-    const [isDead, setIsDead] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
-    // Informações do jogador (puxadas corretamente do localStorage)
-    const playerName = ("TURBOPACK compile-time truthy", 1) ? localStorage.getItem("nomeJogador") : "TURBOPACK unreachable";
-    const playerId = ("TURBOPACK compile-time truthy", 1) ? localStorage.getItem("jogadorId") : "TURBOPACK unreachable";
-    // 🎨 Funções de Desenho (mantidas)
-    const drawGrid = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
-        "Jogo.useCallback[drawGrid]": (ctx)=>{
-            for(let x = 0; x < GRID_SIZE; x++){
-                for(let y = 0; y < GRID_SIZE; y++){
-                    ctx.fillStyle = (x + y) % 2 === 0 ? GRID_COLOR_DARK : GRID_COLOR_LIGHT;
-                    ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-                }
-            }
-        }
-    }["Jogo.useCallback[drawGrid]"], []);
-    const drawSnake = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
-        "Jogo.useCallback[drawSnake]": (ctx, s)=>{
-            ctx.fillStyle = SNAKE_COLOR;
-            s.forEach({
-                "Jogo.useCallback[drawSnake]": (segment)=>{
-                    ctx.fillRect(segment.x * CELL_SIZE, segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-                }
-            }["Jogo.useCallback[drawSnake]"]);
-        }
-    }["Jogo.useCallback[drawSnake]"], []);
-    const drawApple = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
-        "Jogo.useCallback[drawApple]": (ctx, a)=>{
-            ctx.fillStyle = APPLE_COLOR;
-            ctx.fillRect(a.x * CELL_SIZE, a.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-        }
-    }["Jogo.useCallback[drawApple]"], []);
-    const drawGame = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
-        "Jogo.useCallback[drawGame]": (ctx, s, a)=>{
-            drawGrid(ctx);
-            drawSnake(ctx, s);
-            drawApple(ctx, a);
-        }
-    }["Jogo.useCallback[drawGame]"], [
-        drawGrid,
-        drawSnake,
-        drawApple
-    ]);
-    // ⚙️ Lógica do Jogo (mantidas)
-    const saveScore = async (finalScore)=>{};
-    const gameOver = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
-        "Jogo.useCallback[gameOver]": ()=>{
-            setIsDead(true);
-            saveScore(score);
-        }
-    }["Jogo.useCallback[gameOver]"], [
-        score,
-        playerId
-    ]);
-    const restartGame = ()=>{
-        setSnake(INITIAL_SNAKE);
-        setApple(INITIAL_APPLE);
-        setDirection("RIGHT");
-        setScore(0);
-        setIsDead(false);
-    };
-    const gameLoop = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
-        "Jogo.useCallback[gameLoop]": ()=>{
-            if (!context || isDead) return;
-            // 1. Desenha o estado atual
-            drawGame(context, snake, apple);
-            // 2. Calcula a próxima posição da cabeça
-            const head = {
-                ...snake[0]
-            };
-            if (direction === "UP") head.y -= 1;
-            else if (direction === "DOWN") head.y += 1;
-            else if (direction === "LEFT") head.x -= 1;
-            else if (direction === "RIGHT") head.x += 1;
-            // 3. Verifica Colisões: Paredes
-            if (head.x < 0 || head.y < 0 || head.x >= GRID_SIZE || head.y >= GRID_SIZE) {
-                gameOver();
-                return;
-            }
-            // 4. Verifica Colisões: Corpo
-            for(let i = 1; i < snake.length; i++){
-                if (head.x === snake[i].x && head.y === snake[i].y) {
-                    gameOver();
-                    return;
-                }
-            }
-            let newSnake = [
-                head,
-                ...snake
-            ];
-            // 5. Verifica Colisão: Maçã
-            if (head.x === apple.x && head.y === apple.y) {
-                setScore({
-                    "Jogo.useCallback[gameLoop]": (prevScore)=>prevScore + 10
-                }["Jogo.useCallback[gameLoop]"]);
-                // Gera nova maçã
-                let newApple;
-                do {
-                    newApple = {
-                        x: Math.floor(Math.random() * GRID_SIZE),
-                        y: Math.floor(Math.random() * GRID_SIZE)
-                    };
-                }while (newSnake.some({
-                    "Jogo.useCallback[gameLoop]": (segment)=>segment.x === newApple.x && segment.y === newApple.y
-                }["Jogo.useCallback[gameLoop]"]))
-                setApple(newApple);
-            } else {
-                newSnake.pop();
-            }
-            setSnake(newSnake);
-        }
-    }["Jogo.useCallback[gameLoop]"], [
-        context,
-        snake,
-        direction,
-        apple,
-        isDead,
-        drawGame,
-        gameOver
-    ]);
-    // 🚀 Efeitos e Handlers (mantidos, mas usando GAME_SPEED)
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
-        "Jogo.useEffect": ()=>{}
-    }["Jogo.useEffect"], [
-        drawGame
-    ]);
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
-        "Jogo.useEffect": ()=>{
-            if (isDead) return;
-            // Usa a nova velocidade (200ms)
-            const interval = setInterval({
-                "Jogo.useEffect.interval": ()=>{
-                    gameLoop();
-                }
-            }["Jogo.useEffect.interval"], GAME_SPEED);
-            const handleKey = {
-                "Jogo.useEffect.handleKey": (e)=>{
-                    // ... (Lógica de direção)
-                    if (e.key === "ArrowUp" && direction !== "DOWN") setDirection("UP");
-                    else if (e.key === "ArrowDown" && direction !== "UP") setDirection("DOWN");
-                    else if (e.key === "ArrowLeft" && direction !== "RIGHT") setDirection("LEFT");
-                    else if (e.key === "ArrowRight" && direction !== "LEFT") setDirection("RIGHT");
-                }
-            }["Jogo.useEffect.handleKey"];
-            document.addEventListener("keydown", handleKey);
-            return ({
-                "Jogo.useEffect": ()=>{
-                    clearInterval(interval);
-                    document.removeEventListener("keydown", handleKey);
-                }
-            })["Jogo.useEffect"];
-        }
-    }["Jogo.useEffect"], [
-        gameLoop,
-        isDead,
-        direction
-    ]);
-    // 🖼️ Renderização
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        style: {
-            textAlign: "center",
-            backgroundColor: "#000",
-            minHeight: "100vh",
-            color: "white",
-            paddingBottom: "50px"
-        },
-        children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                style: {
-                    color: "yellow",
-                    paddingTop: 20
-                },
-                children: "🐍 SNAKE-ONLINE"
-            }, void 0, false, {
-                fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-                lineNumber: 167,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                style: {
-                    color: "white"
-                },
-                children: [
-                    "Jogador: **",
-                    playerName || "Convidado",
-                    "** "
-                ]
-            }, void 0, true, {
-                fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-                lineNumber: 168,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                style: {
-                    color: "white",
-                    fontSize: "1.2em",
-                    fontWeight: "bold"
-                },
-                children: [
-                    "Pontuação: ",
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                        style: {
-                            color: "yellow"
-                        },
-                        children: score
-                    }, void 0, false, {
-                        fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-                        lineNumber: 172,
-                        columnNumber: 20
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-                lineNumber: 171,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                style: {
-                    position: 'relative',
-                    width: CELL_SIZE * GRID_SIZE,
-                    margin: '20px auto'
-                },
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("canvas", {
-                        ref: canvasRef,
-                        width: CELL_SIZE * GRID_SIZE,
-                        height: CELL_SIZE * GRID_SIZE,
-                        style: {
-                            border: "2px solid white",
-                            background: GRID_COLOR_DARK
-                        }
-                    }, void 0, false, {
-                        fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-                        lineNumber: 176,
-                        columnNumber: 9
-                    }, this),
-                    isDead && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$src$2f$app$2f$jogo$2f$JogarDeNovo$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                        onRestart: restartGame
-                    }, void 0, false, {
-                        fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-                        lineNumber: 184,
-                        columnNumber: 11
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-                lineNumber: 175,
-                columnNumber: 7
-            }, this)
-        ]
-    }, void 0, true, {
-        fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-        lineNumber: 166,
-        columnNumber: 5
-    }, this);
-}
-_s(Jogo, "qBGPUk8m4Y6aXkalaGUUUoxOpYg=");
-_c = Jogo;
-var _c;
-__turbopack_context__.k.register(_c, "Jogo");
-if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
-    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
-}
+const e = new Error("Could not parse module '[project]/snake-frontend/src/app/jogo/page.tsx'\n\nUnexpected eof");
+e.code = 'MODULE_UNPARSABLE';
+throw e;
 }),
 "[project]/snake-frontend/node_modules/next/dist/shared/lib/router/utils/querystring.js [app-client] (ecmascript)", ((__turbopack_context__, module, exports) => {
 "use strict";

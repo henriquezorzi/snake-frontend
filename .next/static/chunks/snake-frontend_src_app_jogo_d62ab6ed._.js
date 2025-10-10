@@ -168,28 +168,29 @@ function Page() {
     _s();
     const canvasRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
     const intervalRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
+    // estados para render
     const [snake, setSnake] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(INITIAL_SNAKE);
     const [apple, setApple] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(INITIAL_APPLE);
-    const [direction, setDirection] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("RIGHT");
     const [score, setScore] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(0);
     const [isDead, setIsDead] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
-    // read once (safe for SSR check)
+    const [speed, setSpeed] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(150);
+    // refs para a lógica real
+    const snakeRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(INITIAL_SNAKE);
+    const directionRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])("RIGHT");
+    const nextDirectionRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])("RIGHT");
     const playerName = ("TURBOPACK compile-time truthy", 1) ? localStorage.getItem("nomeJogador") : "TURBOPACK unreachable";
     const playerId = ("TURBOPACK compile-time truthy", 1) ? localStorage.getItem("jogadorId") : "TURBOPACK unreachable";
     function draw(ctx) {
-        // fundo quadriculado
         for(let x = 0; x < GRID_SIZE; x++){
             for(let y = 0; y < GRID_SIZE; y++){
                 ctx.fillStyle = (x + y) % 2 === 0 ? GRID_COLOR_DARK : GRID_COLOR_LIGHT;
                 ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
             }
         }
-        // cobra
         ctx.fillStyle = SNAKE_COLOR;
-        snake.forEach((seg)=>{
+        snakeRef.current.forEach((seg)=>{
             ctx.fillRect(seg.x * CELL_SIZE, seg.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
         });
-        // maçã
         ctx.fillStyle = APPLE_COLOR;
         ctx.fillRect(apple.x * CELL_SIZE, apple.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
     }
@@ -204,27 +205,28 @@ function Page() {
         saveScoreRemote(score);
     }
     function restartGame() {
+        snakeRef.current = INITIAL_SNAKE;
+        directionRef.current = "RIGHT";
+        nextDirectionRef.current = "RIGHT";
         setSnake(INITIAL_SNAKE);
         setApple(INITIAL_APPLE);
-        setDirection("RIGHT");
         setScore(0);
+        setSpeed(150);
         setIsDead(false);
     }
     function step() {
+        const snake = snakeRef.current;
+        const dir = nextDirectionRef.current;
+        directionRef.current = dir;
         const head = {
             ...snake[0]
         };
-        if (direction === "UP") head.y--;
-        if (direction === "DOWN") head.y++;
-        if (direction === "LEFT") head.x--;
-        if (direction === "RIGHT") head.x++;
-        // colisão parede
-        if (head.x < 0 || head.y < 0 || head.x >= GRID_SIZE || head.y >= GRID_SIZE) {
-            gameOver();
-            return;
-        }
-        // colisão corpo
-        if (snake.some((seg, i)=>i !== 0 && seg.x === head.x && seg.y === head.y)) {
+        if (dir === "UP") head.y--;
+        if (dir === "DOWN") head.y++;
+        if (dir === "LEFT") head.x--;
+        if (dir === "RIGHT") head.x++;
+        // colisões
+        if (head.x < 0 || head.y < 0 || head.x >= GRID_SIZE || head.y >= GRID_SIZE || snake.some((seg, i)=>i !== 0 && seg.x === head.x && seg.y === head.y)) {
             gameOver();
             return;
         }
@@ -232,9 +234,9 @@ function Page() {
             head,
             ...snake
         ];
-        // comeu maçã
         if (head.x === apple.x && head.y === apple.y) {
             setScore((s)=>s + 10);
+            setSpeed((prev)=>Math.max(80, prev - 3));
             let newApple;
             do {
                 newApple = {
@@ -246,32 +248,28 @@ function Page() {
         } else {
             newSnake.pop();
         }
+        snakeRef.current = newSnake;
         setSnake(newSnake);
     }
-    // draw + step loop
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "Page.useEffect": ()=>{
             const canvas = canvasRef.current;
             if (!canvas) return;
             const ctx = canvas.getContext("2d");
             if (!ctx) return;
-            // desenha imediatamente
             draw(ctx);
-            // limpa qualquer intervalo anterior
             if (intervalRef.current) {
                 clearInterval(intervalRef.current);
                 intervalRef.current = null;
             }
             if (isDead) return;
-            // loop de jogo
             intervalRef.current = window.setInterval({
                 "Page.useEffect": ()=>{
                     step();
-                    // redesenha após o passo
                     const ctx2 = canvas.getContext("2d");
                     if (ctx2) draw(ctx2);
                 }
-            }["Page.useEffect"], 150);
+            }["Page.useEffect"], speed);
             return ({
                 "Page.useEffect": ()=>{
                     if (intervalRef.current) {
@@ -280,23 +278,21 @@ function Page() {
                     }
                 }
             })["Page.useEffect"];
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         }
     }["Page.useEffect"], [
-        snake,
         apple,
-        direction,
-        isDead
+        isDead,
+        speed
     ]);
-    // keyboard
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "Page.useEffect": ()=>{
             const handleKey = {
                 "Page.useEffect.handleKey": (e)=>{
-                    if (e.key === "ArrowUp" && direction !== "DOWN") setDirection("UP");
-                    if (e.key === "ArrowDown" && direction !== "UP") setDirection("DOWN");
-                    if (e.key === "ArrowLeft" && direction !== "RIGHT") setDirection("LEFT");
-                    if (e.key === "ArrowRight" && direction !== "LEFT") setDirection("RIGHT");
+                    const dir = directionRef.current;
+                    if (e.key === "ArrowUp" && dir !== "DOWN") nextDirectionRef.current = "UP";
+                    if (e.key === "ArrowDown" && dir !== "UP") nextDirectionRef.current = "DOWN";
+                    if (e.key === "ArrowLeft" && dir !== "RIGHT") nextDirectionRef.current = "LEFT";
+                    if (e.key === "ArrowRight" && dir !== "LEFT") nextDirectionRef.current = "RIGHT";
                 }
             }["Page.useEffect.handleKey"];
             document.addEventListener("keydown", handleKey);
@@ -304,9 +300,7 @@ function Page() {
                 "Page.useEffect": ()=>document.removeEventListener("keydown", handleKey)
             })["Page.useEffect"];
         }
-    }["Page.useEffect"], [
-        direction
-    ]);
+    }["Page.useEffect"], []);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         style: {
             textAlign: "center",
@@ -323,7 +317,7 @@ function Page() {
                 children: "🐍 SNAKE 🐍"
             }, void 0, false, {
                 fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-                lineNumber: 166,
+                lineNumber: 179,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -337,7 +331,7 @@ function Page() {
                 ]
             }, void 0, true, {
                 fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-                lineNumber: 176,
+                lineNumber: 189,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -351,7 +345,7 @@ function Page() {
                 ]
             }, void 0, true, {
                 fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-                lineNumber: 179,
+                lineNumber: 192,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -371,30 +365,30 @@ function Page() {
                         }
                     }, void 0, false, {
                         fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-                        lineNumber: 184,
+                        lineNumber: 203,
                         columnNumber: 9
                     }, this),
                     isDead && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$snake$2d$frontend$2f$src$2f$app$2f$jogo$2f$JogarDeNovo$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                         onRestart: restartGame
                     }, void 0, false, {
                         fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-                        lineNumber: 190,
+                        lineNumber: 209,
                         columnNumber: 20
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-                lineNumber: 183,
+                lineNumber: 196,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/snake-frontend/src/app/jogo/page.tsx",
-        lineNumber: 165,
+        lineNumber: 178,
         columnNumber: 5
     }, this);
 }
-_s(Page, "Cr79NDU1ODsZn0+XcTfigBlRM9c=");
+_s(Page, "mQcPdyAoxw7xKZ+f2aPjCs7gCgQ=");
 _c = Page;
 var _c;
 __turbopack_context__.k.register(_c, "Page");

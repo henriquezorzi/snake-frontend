@@ -8,9 +8,6 @@ __turbopack_context__.n(__turbopack_context__.i("[project]/snake-frontend/src/ap
 }),
 "[project]/snake-frontend/src/app/jogo/page.tsx [app-rsc] (ecmascript)", ((__turbopack_context__, module, exports) => {
 
-const e = new Error("Could not parse module '[project]/snake-frontend/src/app/jogo/page.tsx'\n\nExpression expected");
-e.code = 'MODULE_UNPARSABLE';
-throw e;
 }),
 "[project]/snake-frontend/src/app/jogo/page.tsx [app-rsc] (ecmascript, Next.js Server Component)", ((__turbopack_context__) => {
 
