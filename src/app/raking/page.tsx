@@ -23,10 +23,10 @@ export default function Ranking() {
       // Tenta buscar do endpoint de ranking primeiro
       let response;
       try {
-        response = await axios.get(`https://snake-api-zhfr.vercel.app/ranking`);
+        response = await axios.get(`${process.env.NEXT_PUBLIC_URLAPI!}/ranking`);
       } catch (rankingError) {
         // Se não existir endpoint de ranking, busca todos os jogadores
-        response = await axios.get(`https://snake-api-zhfr.vercel.app/jogadores`);
+        response = await axios.get(`${process.env.NEXT_PUBLIC_URLAPI!}/jogadores`);
       }
       
       if (response.data && Array.isArray(response.data)) {
@@ -43,7 +43,7 @@ export default function Ranking() {
         setScores(playersWithScores);
       } else {
         // Fallback para a URL original
-        const fallbackResponse = await axios.get(`http://localhost:4000`);
+        const fallbackResponse = await axios.get(process.env.NEXT_PUBLIC_URLAPI!);
         if (fallbackResponse.data && Array.isArray(fallbackResponse.data)) {
           const sortedScores = fallbackResponse.data.sort((a: Score, b: Score) => b.pontos - a.pontos);
           setScores(sortedScores);

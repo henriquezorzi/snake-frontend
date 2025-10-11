@@ -56,7 +56,7 @@ export default function Page(): JSX.Element {
   function saveScoreRemote(finalScore: number) {
     if (!playerId) return;
     axios
-      .put(`http://localhost:4000/jogadores/${playerId}/score`, { score: finalScore })
+      .put(`${process.env.NEXT_PUBLIC_URLAPI!}/jogadores/${playerId}/score`, { score: finalScore })
       .then(() => console.log("Score salvo/atualizado com sucesso!"))
       .catch((err) => console.error("Erro ao salvar score:", err));
   }

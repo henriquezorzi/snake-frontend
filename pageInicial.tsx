@@ -10,7 +10,7 @@ export default function Home() {
 
   const registrarJogador = async () => {
     if (!nome) return alert("Digite seu nome!");
-    await axios.post("https://SUA_API/players", { nome });
+    await axios.post(process.env.NEXT_PUBLIC_URLAPI!, { nome });
     localStorage.setItem("snake_player", nome);
     setRegistrado(true);
   };
